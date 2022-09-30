@@ -26,13 +26,8 @@ def make_tiles(board, the_group):
 def init_board():
   board = np.zeros((4,4))
   p1 = (random.randint(0, 3), random.randint(0, 3))
-  same = True
-  while same:
-    p2 = (random.randint(0, 3), random.randint(0, 3))
-    if p1 != p2: same = False
-    else: print('Retrying', p1, p2)
-  board[p1[0], p1[1]] = 2
-  board[p2[0], p2[1]] = 2
+  spawn(board)
+  spawn(board)
   return board
 
 #def draw_board(screen, board):
@@ -85,7 +80,7 @@ def spawn(board):
   if np.any(board == 0):
     i = random.choice(np.where(np.any(board == 0, axis=1))[0]) 
     j = random.choice(np.where(board[i] == 0)[0])
-    board[i][j] = 2
+    board[i][j] = (2 if random.random() < .9 else 4)
 
 def shift_left(board):
   new_board = []
