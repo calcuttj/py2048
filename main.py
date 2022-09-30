@@ -62,9 +62,10 @@ def can_shift_left(board):
   #print(shiftable)
 
 def spawn(board):
-  i = random.choice(np.where(np.any(board == 0, axis=1))[0]) 
-  j = random.choice(np.where(board[i] == 0)[0])
-  board[i][j] = 2
+  if np.any(board == 0):
+    i = random.choice(np.where(np.any(board == 0, axis=1))[0]) 
+    j = random.choice(np.where(board[i] == 0)[0])
+    board[i][j] = 2
 
 def shift_left(board):
   new_board = []
@@ -72,16 +73,17 @@ def shift_left(board):
     trimmed_row = row[row != 0]
     #print(trimmed_row)
 
-    to_replace = []
-    to_delete = []
-    for i in range(1, len(trimmed_row)):
+    i = 1
+    the_len = len(trimmed_row)
+    while i < the_len:
+    #for i in range(1, len(trimmed_row)):
       #print(trimmed_row[i-1], trimmed_row[i])
       if trimmed_row[i-1] == trimmed_row[i]:
         trimmed_row[i-1] *= 2
         trimmed_row = np.delete(trimmed_row, i)
-        #to_replace.append((i-1), trimmed_row[i-1]*2)
-        #to_delete.append(i)
-        break
+      i += 1
+      the_len = len(trimmed_row)
+        #break
 
     padded_row = np.pad(trimmed_row, (0, len(row)-len(trimmed_row)), 'constant', constant_values=(0, 0))
     #print(padded_row)
@@ -100,8 +102,8 @@ if __name__ == '__main__':
   print(the_board)
 
   screen = pygame.display.set_mode(size)
-  ball = pygame.image.load("intro_ball.gif")
-  ballrect = ball.get_rect()
+  #ball = pygame.image.load("intro_ball.gif")
+  #ballrect = ball.get_rect()
 
   score = 0
 
