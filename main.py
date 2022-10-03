@@ -2,6 +2,7 @@ import pygame
 import numpy as np
 import sys
 import random
+import argparse as ap
 
 class Tile(pygame.sprite.Sprite):
   def __init__(self, value, pos, screen):
@@ -35,8 +36,8 @@ def make_tiles(board, the_group, screen):
         the_group.add(Tile(board[i][j], (i, j), screen))
 
 #Make all zeros on the board -- spawn tiles on two random spaces 
-def init_board():
-  board = np.zeros((4,4))
+def init_board(n=4):
+  board = np.zeros((n,n))
   spawn(board)
   spawn(board)
   return board
@@ -124,14 +125,22 @@ def shift_left(board):
   return (np.array(new_board), score)
 
 if __name__ == '__main__':
+
+  parser = ap.ArgumentParser()
+  parser.add_argument('-n', default=4, type=int)
+  parser.add_argument('--nolimit', action='store_true')
+  args = parser.parse_args()
+
   pygame.init()
 
-  size = width, height = 600, 600
+  #size = width, height = 600, 600
+  width = 140*args.n + 8*(args.n + 1)
+  size = width, width 
   black = 0, 0, 0
   speed = [0, 0]
 
   #Initial setup
-  the_board = init_board()
+  the_board = init_board(args.n)
   print(the_board)
   screen = pygame.display.set_mode(size)
   all_sprites = pygame.sprite.RenderUpdates()
@@ -155,7 +164,7 @@ if __name__ == '__main__':
                 can_shift_up(the_board) or can_shift_down(the_board)):
           print('YOU LOSE')
 
-        if np.any(the_board == 2048):
+        if np.any(the_board == 2048) and not args.nolimit:
           print('YOU WIN')
           continue
         if event.key == pygame.K_LEFT and can_shift_left(the_board):
